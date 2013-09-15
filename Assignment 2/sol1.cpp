@@ -47,51 +47,43 @@ void display() {
     glColor3f(0, 0, 1); glVertex3f(0, 0, 0); glVertex3f(0, 0, 10);
     glEnd();
 
-  /*  // Road
+    // Road
     cube road(point(),2);
-    //s.shear(1.0,0.0,0.0,0.0,0.0,0.0);
-
+    road.scale(1.0,0.0,10.0);
+    road.render();   
+    
+/*
     point p1(0.0,0.0,0.0), p2(1.0,0.0,0.0);
     float angle=90.0;
     point p(-4.0, 0.0, 0.0);
-    road.translate (p);
-    road.scale(1.0,0.0,10.0);
     road.rotate (p1,p2,angle);
 //    p2.x=0.0; p2.y=1.0;
 //    road.rotate (p1,p2,angle);
-    road.render();   
     */
     // Home
-    cube home(point(5.0,2,5.0),4);
-    home.render();   
+    cube home(point(),4);
+    home.translate(point(5.0,2,5.0));
+    home.render(); 
 
     // Tree
-    /*
+    
     cube trunk(point(0.0,2,0.0),4);
     trunk.scale(0.25,1,0.25);
-    trunk.render();   
     sphere tree(point(0.0,5.0,0.0),2.0);
+    tree.translate(point(-2.0,0,0));
+    trunk.translate(point(-2.0,0,0));
     tree.render();
-*/
-    sphere tummy(point(),1.0);
-    tummy.scale(0.5,1.0,0.5);
-    sphere head(point(0.0,1.0,0.0),0.25);
-    tummy.scale(0.5,1.0,0.5);
+    trunk.render();   
 
-    /*cube leg1(point(0.0,2,0.0),4);
-    leg1.scale(0.25,1,0.25);
     
-    cube leg2(point(0.0,2,0.0),4);
-    leg2.scale(0.25,1,0.25);
-    
-    cube hand1(point(0.0,2,0.0),4);
-    hand1.scale(0.25,1,0.25);
-    
-    cube hand2(point(0.0,2,0.0),4);
-    hand2.scale(0.25,1,0.25);
-*/
+    sphere tummy(point(),1.0);
+    sphere head(point(0.0,1.0,0.0),0.25);
+    tummy.scale(0.25,1.0,0.25);
+    tummy.translate(point(3.0,0.75,-3.0));
+    head.translate(point(3.0,0.5,-3.0));
     tummy.render();
     head.render();
+
 
 
     glFlush();

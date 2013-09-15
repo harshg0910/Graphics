@@ -3,6 +3,8 @@ CPP = g++ -Wall
 
 all: sol1.cpp objects.o 
 	$(CPP) sol1.cpp objects.o -o sol1 $(LIB)
+	$(CPP) solution4.cpp -o sol4 $(LIB)
+
 
 objects.o:objects.cpp objects.h
 	$(CPP) -c objects.cpp -o objects.o 
