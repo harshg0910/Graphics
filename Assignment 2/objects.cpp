@@ -121,9 +121,9 @@ sphere::sphere(point cen,double rad ){
 	radius = rad;
     for(double theta = -90.0; theta < 90.0 ; theta++ ){
 	    for(int phi=0 ;phi < 360 ; phi++) {
-	        double x = radius*cos(toRad(theta))*cos(toRad(phi));
-	        double y = radius*sin(toRad(theta));
-	        double z = radius*cos(toRad(theta))*sin(toRad(phi));
+	        double x = center.x + radius*cos(toRad(theta))*cos(toRad(phi));
+	        double y = center.y + radius*sin(toRad(theta));
+	        double z = center.z + radius*cos(toRad(theta))*sin(toRad(phi));
 	        points.push_back(point(x,y,z));
         }
 	}

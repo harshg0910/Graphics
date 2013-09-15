@@ -8,9 +8,9 @@
 // Global Variables
 double rotate_y          = 0.0;
 double rotate_x          = 0.0;
-double zoom              = 1.0;
+double zoom              = 0.1;
 const double rotate_step = 5.0;
-const double zoom_step   = 0.01;
+const double zoom_step   = 0.1;
 
 void keyboard(unsigned char key, int x, int y)
 {
@@ -47,15 +47,44 @@ void display() {
     glColor3f(0, 0, 1); glVertex3f(0, 0, 0); glVertex3f(0, 0, 10);
     glEnd();
 
-    // Road
+  /*  // Road
     cube road(point(),2);
     //s.shear(1.0,0.0,0.0,0.0,0.0,0.0);
     road.scale(1.0,0.0,10.0);
     road.render();   
-    
+    */
     // Home
     cube home(point(5.0,2,5.0),4);
     home.render();   
+
+    // Tree
+    /*
+    cube trunk(point(0.0,2,0.0),4);
+    trunk.scale(0.25,1,0.25);
+    trunk.render();   
+    sphere tree(point(0.0,5.0,0.0),2.0);
+    tree.render();
+*/
+    sphere tummy(point(),1.0);
+    tummy.scale(0.5,1.0,0.5);
+    sphere head(point(0.0,1.0,0.0),0.25);
+    tummy.scale(0.5,1.0,0.5);
+
+    /*cube leg1(point(0.0,2,0.0),4);
+    leg1.scale(0.25,1,0.25);
+    
+    cube leg2(point(0.0,2,0.0),4);
+    leg2.scale(0.25,1,0.25);
+    
+    cube hand1(point(0.0,2,0.0),4);
+    hand1.scale(0.25,1,0.25);
+    
+    cube hand2(point(0.0,2,0.0),4);
+    hand2.scale(0.25,1,0.25);
+*/
+    tummy.render();
+    head.render();
+
 
     glFlush();
     glutSwapBuffers();
