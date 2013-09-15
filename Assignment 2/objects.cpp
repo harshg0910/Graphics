@@ -1,4 +1,5 @@
-#include <math.h>
+#include <GL/glut.h>
+#include <cmath>
 #include "objects.h"
 
 #define toRad(a) a*3.14/180
@@ -39,10 +40,71 @@ void Object::shear(double shxy,double shxz,double shyx,
 }
 
 void Object::render(){
-	
+	glBegin(GL_POINTS);
+    for(unsigned int i = 0 ; i < points.size() ; i++){
+        point p = points[i];
+        glVertex3f(p.x,p.y,p.z);
+    }
+    glEnd();
 } 
 
 cube::cube(point center,double side){
+	
+	// For front and back faces
+	double i = center.x - side/2.0;
+	for (double j = center.y - side/2.0; j <= center.y + side/2.0; j += 0.01)
+	{
+		for (double k = center.z - side/2.0; k <= center.z + side/2.0; k += 0.01)
+		{
+			points.push_back(point(i,j,k));
+		}
+	}
+	i = center.x + side/2.0;
+	for (double j = center.y - side/2.0; j <= center.y + side/2.0; j += 0.01)
+	{
+		for (double k = center.z - side/2.0; k <= center.z + side/2.0; k += 0.01)
+		{
+			points.push_back(point(i,j,k));
+		}
+	}
+
+	// For left and right faces
+	i = center.y - side/2.0;
+	for (double j = center.x - side/2.0; j <= center.x + side/2.0; j += 0.01)
+	{
+		for (double k = center.z - side/2.0; k <= center.z + side/2.0; k += 0.0100)
+		{
+			points.push_back(point(j,i,k));
+		}
+	}
+	i = center.y + side/2.0;
+	for (double j = center.x - side/2.0; j <= center.x + side/2.0; j += 0.01)
+	{
+		for (double k = center.z - side/2.0; k <= center.z + side/2.0; k += 0.01)
+		{
+			points.push_back(point(j,i,k));
+		}
+	}
+
+	// For top and bottom faces
+	i = center.z - side/2.0;
+	for (double j = center.y - side/2.0; j <= center.y + side/2.0; j += 0.01)
+	{
+		for (double k = center.x - side/2.0; k <= center.x + side/2.0; k += 0.01)
+		{
+			points.push_back(point(k,j,i));
+		}
+	}
+	i = center.z + side/2.0;
+	for (double j = center.y - side/2.0; j <= center.y + side/2.0; j += 0.01)
+	{
+		for (double k = center.x - side/2.0; k <= center.x + side/2.0; k += 0.01)
+		{
+			points.push_back(point(k,j,i));
+		}
+	}
+
+	/*
 	points.push_back(point(center.x - side/2.0 , center.y - side/2.0, center.z - side/2.0));
 	points.push_back(point(center.x - side/2.0 , center.y - side/2.0, center.z + side/2.0));
 	points.push_back(point(center.x - side/2.0 , center.y + side/2.0, center.z + side/2.0));
@@ -51,9 +113,10 @@ cube::cube(point center,double side){
 	points.push_back(point(center.x + side/2.0 , center.y - side/2.0, center.z + side/2.0));
 	points.push_back(point(center.x + side/2.0 , center.y + side/2.0, center.z + side/2.0));
 	points.push_back(point(center.x + side/2.0 , center.y + side/2.0, center.z - side/2.0));
+	*/
 }
 
-sphere::sphere(double rad ,point cen){
+sphere::sphere(point cen,double rad ){
 	center = cen;
 	radius = rad;
     for(double theta = -90.0; theta < 90.0 ; theta++ ){

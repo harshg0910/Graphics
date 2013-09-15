@@ -35,15 +35,13 @@ public:
 class cube : public Object{
 public:
 	cube(point center,double side);
-	void render(){};
 };
 
 class sphere : public Object{
 public:
 	point center;
 	double radius;
-	sphere(double radius , point center);
-	void render(){};
+	sphere(point center,double radius );
 };
 
 #endif

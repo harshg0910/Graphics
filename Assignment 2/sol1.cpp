@@ -47,16 +47,15 @@ void display() {
     glColor3f(0, 0, 1); glVertex3f(0, 0, 0); glVertex3f(0, 0, 10);
     glEnd();
 
-
-    sphere s(1,point());
-   
-    glBegin(GL_POINTS);
-    s.shear(1.0, 0.0, 0, 0, 0, 0);
-    for(unsigned int i = 0 ; i < s.points.size() ; i++){
-        point p = s.points[i];
-        glVertex3f(p.x,p.y,p.z);
-    }
-    glEnd();
+    // Road
+    cube road(point(),2);
+    //s.shear(1.0,0.0,0.0,0.0,0.0,0.0);
+    road.scale(1.0,0.0,10.0);
+    road.render();   
+    
+    // Home
+    cube home(point(5.0,2,5.0),4);
+    home.render();   
 
     glFlush();
     glutSwapBuffers();
