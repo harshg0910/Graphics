@@ -1,9 +1,11 @@
 LIB = -lGL -lGLU -lglut
 CPP = g++ -Wall
 
-all: sol1.cpp objects.o 
-	$(CPP) sol1.cpp objects.o -o sol1 $(LIB)
-	$(CPP) solution4.cpp -o sol4 $(LIB)
+all: sol3.cpp objects.o cube.cpp sphere.cpp sol5.cpp
+	$(CPP) sol3.cpp objects.o -o sol3 $(LIB)
+	$(CPP) cube.cpp objects.o -o cube $(LIB)
+	$(CPP) sphere.cpp objects.o -o sphere $(LIB)
+	$(CPP) sol5.cpp -o sol5 $(LIB)
 
 
 objects.o:objects.cpp objects.h
@@ -27,4 +29,4 @@ objects.o:objects.cpp objects.h
 # 	g++ -Wall -c octree.cpp -o octree.o
 
 clean:
-	rm -rf sol1 vertexList.o sol3-vertexList sol3-octree sol4 *.o
+	rm -rf cube sphere sol3 sol5 *.o

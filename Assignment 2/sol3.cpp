@@ -52,21 +52,12 @@ void display() {
     road.scale(1.0,0.0,10.0);
     road.render();   
     
-/*
-    point p1(0.0,0.0,0.0), p2(1.0,0.0,0.0);
-    float angle=90.0;
-    point p(-4.0, 0.0, 0.0);
-    road.rotate (p1,p2,angle);
-//    p2.x=0.0; p2.y=1.0;
-//    road.rotate (p1,p2,angle);
-    */
     // Home
     cube home(point(),4);
     home.translate(point(5.0,2,5.0));
     home.render(); 
 
     // Tree
-    
     cube trunk(point(0.0,2,0.0),4);
     trunk.scale(0.25,1,0.25);
     sphere tree(point(0.0,5.0,0.0),2.0);
@@ -75,7 +66,7 @@ void display() {
     tree.render();
     trunk.render();   
 
-    
+    // Body
     sphere tummy(point(),1.0);
     sphere head(point(0.0,1.0,0.0),0.25);
     tummy.scale(0.25,1.0,0.25);
