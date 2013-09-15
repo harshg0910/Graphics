@@ -8,9 +8,9 @@
 // Global Variables
 double rotate_y          = 0.0;
 double rotate_x          = 0.0;
-double zoom              = 1.0;
+double zoom              = 0.1;
 const double rotate_step = 5.0;
-const double zoom_step   = 0.01;
+const double zoom_step   = 0.1;
 
 void keyboard(unsigned char key, int x, int y)
 {
@@ -50,7 +50,15 @@ void display() {
     // Road
     cube road(point(),2);
     //s.shear(1.0,0.0,0.0,0.0,0.0,0.0);
+
+    point p1(0.0,0.0,0.0), p2(1.0,0.0,0.0);
+    float angle=90.0;
+    point p(-4.0, 0.0, 0.0);
+    road.translate (p);
     road.scale(1.0,0.0,10.0);
+    road.rotate (p1,p2,angle);
+//    p2.x=0.0; p2.y=1.0;
+//    road.rotate (p1,p2,angle);
     road.render();   
     
     // Home
@@ -72,7 +80,7 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutCreateWindow("A Simple Torus");
     glEnable(GL_DEPTH_TEST);
-    glClearColor (0,0,0,0); // white
+    glClearColor (1,1,1,0); // white
     glutDisplayFunc(display);
     glutKeyboardFunc(keyboard);
     glutMainLoop();
