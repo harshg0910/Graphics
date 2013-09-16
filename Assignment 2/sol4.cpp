@@ -34,26 +34,26 @@ void keyboard(unsigned char key, int x, int y)
 
 void cube(point center,double side) {
     double half_side = side / 2.0;
-    double front     = center.z - half_side;
-    double back      = center.z + half_side;
-    double left      = center.x - half_side;
+    double front     = center.z + half_side;
+    double back      = center.z - half_side;
     double right     = center.x + half_side;
-    double bottom    = center.y - half_side;
+    double left      = center.x - half_side;
     double top       = center.y + half_side;
+    double bottom    = center.y - half_side;
 
-    vector<Point3D> cubeVertices;
-    Point3D p;
-    p.x = left;	 p.y=top; 	p.z=front; cubeVertices.push_back (p);
-    p.x = right; p.y=top; 	p.z=front; cubeVertices.push_back (p);
-    p.x = right; p.y=bottom; 	p.z=front; cubeVertices.push_back (p);
-    p.x = left;  p.y=top;	p.z=front; cubeVertices.push_back (p);
-    p.x = left;  p.y=top; 	p.z=back;  cubeVertices.push_back (p);
-    p.x = right; p.y=top; 	p.z=back;  cubeVertices.push_back (p);
-    p.x = right; p.y=bottom; 	p.z=back;  cubeVertices.push_back (p);
-    p.x = left;  p.y=bottom; 	p.z=back;  cubeVertices.push_back (p);
+    float p[8][3];
+    p[0][0] = left;  p[0][1]=top; 	p[0][2]=front;  
+    p[1][0] = right; p[1][1]=top; 	p[1][2]=front; 
+    p[2][0] = right; p[2][1]=bottom; 	p[2][2]=front; 
+    p[3][0] = left;  p[3][1]=bottom;	p[3][2]=front;
+    p[4][0] = left;  p[4][1]=top; 	p[4][2]=back;  
+    p[5][0] = right; p[5][1]=top; 	p[5][2]=back;  
+    p[6][0] = right; p[6][1]=bottom; 	p[6][2]=back;  
+    p[7][0] = left;  p[7][1]=bottom; 	p[7][2]=back;  
 
     float color[3] = {1.0, 0.5, 0.2};
-    drawObjectGivenVertices (CUBE, cubeVertices, color);
+    vector<Point3D> cubeV(&p[0], &p[0]+8);
+    drawObjectGivenVertices (CUBE, cubeV, color);
 }
 
 // Clears the window and draws the torus.
@@ -82,10 +82,12 @@ void display() {
         	{1.0f, 0.0f, -10.0f}
 	};
     vector<Point3D> roadVertices (&roadVerticesM[0], &roadVerticesM[0]+4);
+    float color[3] = {1.0, 0.5, 0.2};
     drawObjectGivenVertices (POLYGON, roadVertices, color);
     // end ROAD
 
     // Home
+    // THIS IS NOT HOME ;)
     cube(point(5.0,2,5.0),4);
 
     // Tree
@@ -98,7 +100,6 @@ void display() {
     glutSolidSphere(2, 20, 20);
     glPopMatrix (); 
  
-
     // Body
     glPushMatrix ();
     glTranslatef (3.0,0.75,-3.0);
@@ -111,7 +112,6 @@ void display() {
     glTranslatef (3.0,1.5,-3.0);
     glutSolidSphere(0.25, 20, 20);
     glPopMatrix (); 
-
 
     glFlush();
     glutSwapBuffers();
