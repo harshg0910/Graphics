@@ -1,6 +1,7 @@
 #include <GL/glut.h>
 #include <cmath>
 #include "objects.h"
+#include <cstdlib>
 
 #define toRad(a) a*3.14/180
 
@@ -54,6 +55,12 @@ void Object::translate3D (point P, Matrix4x4& matTransl3D) {
 void Object::rotate3D (point p1, point p2, float angleInDegrees, Matrix4x4 finalRotation) {
     float angle = degreesToRadians (angleInDegrees);
     float a=p2.x-p1.x, b=p2.y-p1.y, c=p2.z-p1.z;
+    float D = sqrt(a*a + b*b + c*c);
+    if (D == 0) {
+	cerr << "Error rotation vector magnitude is 0" << endl;
+	exit(1);
+    }
+    a/= D; b/=D, c/=D;
     float d = sqrt(b*b + c*c);
     Matrix4x4 matTranslationForward;
     Matrix4x4 matRotateToXZ, matRotateToZ;
@@ -204,6 +211,7 @@ void Object::render(){
 	glBegin(GL_POINTS);
     for(unsigned int i = 0 ; i < points.size() ; i++){
         point p = points[i];
+	glColor3f (color[0], color[1], color[2]);
         glVertex3f(p.x,p.y,p.z);
     }
     glEnd();

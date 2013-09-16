@@ -50,11 +50,13 @@ void display() {
     // Road
     cube road(point(),2);
     road.scale(1.0,0.0,10.0);
+    road.rotate(point(0.0,0.0,0.0), point(1.0,0.0,0.0), 90.0);
     road.render();   
     
     // Home
     cube home(point(),4);
     home.translate(point(5.0,2,5.0));
+    home.setColor (1.0,0.0,0.0);
     home.render(); 
 
     // Tree
@@ -63,6 +65,7 @@ void display() {
     sphere tree(point(0.0,5.0,0.0),2.0);
     tree.translate(point(-2.0,0,0));
     trunk.translate(point(-2.0,0,0));
+    tree.setColor (0.0f, 1.0f, 0.0);
     tree.render();
     trunk.render();   
 
@@ -72,10 +75,26 @@ void display() {
     tummy.scale(0.25,1.0,0.25);
     tummy.translate(point(3.0,0.75,-3.0));
     head.translate(point(3.0,0.5,-3.0));
+    
+    tummy.setColor (0,0,0);	// black
+    head.setColor (1,0,0);	// red
+
     tummy.render();
     head.render();
 
+    // hands
+    cube hand(point(),3);
+    hand.scale(1.0,0.0,0.0);
+    hand.translate(point(3.0,0.75,-3.0));
+    hand.setColor (0.0,1.0,1.0);
+    hand.render(); 
 
+    // legs
+    cube legs(point(),3);
+    legs.scale(1.0,0.0,0.25);
+    legs.translate(point(3.0,0.0,-3.0));
+    legs.setColor (0.0,1.0,1.0);
+    legs.render(); 
 
     glFlush();
     glutSwapBuffers();
