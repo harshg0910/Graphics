@@ -89,16 +89,16 @@ void display() {
     head.render();
 
     // hands
-    cube hand(point(),3);
-    hand.scale(1.0,0.0,0.0);
+    cube hand(point(),0.4);
+    hand.scale(1.0,0.0,1.0);
     hand.translate(point(3.0,0.75,-3.0));
     hand.setColor (0.0,1.0,1.0);
     hand.render(); 
 
     // legs
-    cube legs(point(),3);
-    legs.scale(1.0,0.0,0.25);
-    legs.translate(point(3.0,0.0,-3.0));
+    cube legs(point(),0.4);
+//    legs.scale(1.0,0.0,0.25);
+    legs.translate(point(3.0,-0.2,-3.0));
     legs.setColor (0.0,1.0,1.0);
     legs.render(); 
 

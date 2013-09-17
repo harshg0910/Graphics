@@ -150,7 +150,7 @@ void display() {
     glPushMatrix ();
     glTranslatef (3.0,0.75,-3.0);
     glScaled(0.25,1,0.25);
-    glColor3f(0.0,0.0,1.0);
+    glColor3f(0.0,0.0,0.0);
     glutSolidSphere(1, 20, 20);
     glPopMatrix (); 
 
@@ -162,6 +162,9 @@ void display() {
     glPopMatrix (); 
 
     // hands
+    glColor3f(1.0,0.0,0.0);
+    //glScaled(1,0,1);
+    glColor3f(0.0,1.0,1.0);
     cube(point(3.0,0.75,-3.0),0.4);
     // legs
     cube(point(3.0,-0.2,-3.0),0.4);
