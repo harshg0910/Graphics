@@ -97,21 +97,30 @@ void display() {
     cube(point(0.0,2.0,0.0),4);
     glScaled(4,1,4);
     glTranslatef (0.0,5.0,0.0);
-    glutSolidSphere(2, 20, 20);
+    cube(point(0.0,0.0,0.0),2.4);	// tree head
+    //glutSolidSphere(2, 20, 20);
     glPopMatrix (); 
  
     // Body
     glPushMatrix ();
     glTranslatef (3.0,0.75,-3.0);
     glScaled(0.25,1,0.25);
-    glutSolidSphere(1, 20, 20);
+    cube(point(0.0,0.0,0.0),1.4);	// andriod body
+    //glutSolidSphere(1, 20, 20);
     glPopMatrix (); 
 
     // head
     glPushMatrix ();
     glTranslatef (3.0,1.5,-3.0);
-    glutSolidSphere(0.25, 20, 20);
+    cube(point(0.0,0.0,0.0),0.2);	// andriod head
+   // glutSolidSphere(0.25, 20, 20);
     glPopMatrix (); 
+
+    // hands
+    cube(point(3.0,0.75,-3.0),0.4);
+
+    // legs
+    cube(point(3.0,-0.2,-3.0),0.4);
 
     glFlush();
     glutSwapBuffers();

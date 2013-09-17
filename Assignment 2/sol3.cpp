@@ -50,7 +50,7 @@ void display() {
     // Road
     cube road(point(),2);
     road.scale(1.0,0.0,10.0);
-    road.rotate(point(0.0,0.0,0.0), point(1.0,0.0,0.0), 90.0);
+//    road.rotate(point(0.0,0.0,0.0), point(1.0,0.0,0.0), 90.0);
     road.render();   
     
     // Home
@@ -58,6 +58,12 @@ void display() {
     home.translate(point(5.0,2,5.0));
     home.setColor (1.0,0.0,0.0);
     home.render(); 
+
+/*    cube door(point(),2);
+    door.translate(point(5.0,1,7.0));
+    door.scale(0.25,1,0.25);
+    door.setColor (0.0,0.0,0.0);
+    door.render(); */
 
     // Tree
     cube trunk(point(0.0,2,0.0),4);
