@@ -48,4 +48,5 @@ Intensity intensityAtP (Intensity Ia, vector<Intensity> Is, vector<point> Ls, Su
 // Due to single light source (Il,d + Il,s)
 Intensity intensityAtP (Intensity Il, SurfaceK Ka, SurfaceK Kd, SurfaceK Ks, point pP, point pL, point pN, point pV, double ns);
 
+void setPerspective (GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar);
 #endif

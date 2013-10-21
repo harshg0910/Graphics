@@ -1,0 +1,153 @@
+#include "intensityCalculation.h"
+
+typedef point vector3;
+Intensity intensityAtP (Intensity Ia, vector<Intensity> Is, vector<point> Ls, SurfaceK Ka, SurfaceK Kd, SurfaceK Ks, point pP, point pN, point pV, double ns) {
+	// Ambient component
+	Intensity I = Ia;
+	I.intensityMulK (Ka);
+
+	for(int i=0; i<Ls.size(); ++i) 
+		I = I + intensityAtP (Is[i], Ka, Kd, Ks, pP, Ls[i], pN, pV, ns);
+
+	return I;
+}
+
+Intensity intensityAtP (Intensity Il, SurfaceK Ka, SurfaceK Kd, SurfaceK Ks, point pP, point pL, point pN, point pV, double ns) {
+	Intensity I;
+	// Diffuse Component
+	vector3 N(pN);
+	N.normalize();
+
+	pL = pL-pP;
+	vector3 L(pL);
+	L.normalize();
+
+	double cosT = N.dot(L);
+	if (cosT > 0.0) {
+		Intensity Id = Il;
+		Id.intensityMulK (Kd);
+
+		SurfaceK kCosT (cosT, cosT, cosT);
+		Id.intensityMulK (kCosT);
+		
+		I = I + Id;
+
+		// Specular Diffusion
+		pV = pV-pP;
+		vector3 V(pV);
+		pV.normalize();
+
+		N.scale (2*cosT);
+		vector3 R(N);
+		R = R-L;
+
+		double cosPhi = V.dot(R);
+		if (cosPhi > 0.0) {
+			Intensity Is = Il;
+			Is.intensityMulK (Kd);
+
+			cosPhi = pow(cosPhi, ns);
+			SurfaceK kCosPhi (cosPhi, cosPhi, cosPhi);
+			Is.intensityMulK (kCosPhi);
+
+			I = I + Is;
+		}
+	}
+
+	return I;
+}
+
+// World to Eye coordinates 
+void worldToEye (vector3 eye, vector3 coi, vector3 v_up) {
+	vector3 n = eye-coi;
+	n.normalize();
+
+	vector3 u = v_up.cross (n);
+	u.normalize();
+
+	vector3 v = n.cross (u);
+	w2e[4][4] =
+		{
+			{ u.x, u.y, u.z, -(eye.dot(u)) },
+			{ v.x, v.y, v.z, -(eye.dot(v)) },
+			{ n.x, n.y, n.z, -(eye.dot(n)) } ,
+			{  0,   0,   0,   1 }
+		};
+
+	return w2e;
+} 
+
+// Set the camera to this position with respective parameters
+Matrix4x4 setPerspective (GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar) {
+	fovy = toRad (fovy);
+	fovy /= 2;
+	double f = cos(fovy) / sin(fovy);
+	Matrix4x4 persepectiveMat = 
+	{
+		f/aspect, 0, 0, 0,
+		0, f, 0, 0,
+		0, 0, (zFar+zNear)/(zNear-zFar), (2*zFar*zNear)/(zNear-zFar),
+		0, 0,-1,0
+	};
+
+	// Is this allowed?
+	/*glMatrixMode (GL_PROJECTION);
+	glLoadIdentity ();
+	glMultMatrix (persepectiveMat);
+	glMatrixMode (GL_MODELVIEW);*/
+	return persepectiveMat;
+}
+
+// Convert the window to view port
+Matrix4x4 setViewPort (GLint vx1, GLint vx2, GLint vy1, GLint vy2,
+			GLint wx1, GLint wx2, GLint wy1, GLint wy2) {
+	double sx = (vx2-vx1) / (wx2-wx1);
+	double sy = (vy2-vy1) / (wy2-wy1);
+	double tx = sx * (-wx1) + vx1;
+	double ty = sy * (-wy1) + vy1;
+
+	Matri4x4 viewMatrix = 
+		{
+			sx,  0, 0, tx,
+			 0, sy, 0, ty,
+			 0,  0, 0,  0,
+			 0,  0, 0,  1
+		};
+
+	return viewMatrix;
+}
+
+int main () {
+/*	Intensity Ia(1.0,1.0,0.0), Il(0.0,1.0,1.0);
+	SurfaceK Ka(0.01, 0.01, 0.2), Ks=Ka, Kd=Ka;
+	double ns = 0.002;
+	point p, l(0,0,10), v(4,0,0), n(1,1,1);
+
+	vector<Intensity> Is(1,Il);
+	vector<point> Ls(1,l);
+	Intensity I = intensityAtP(Ia, Is, Ls, Ka, Kd, Ks, p, n, v, ns);
+	I.print(); */
+
+	Object o;
+	point p(0,0,-2);
+	o.points.push_back (p);
+
+	cout << "Initial time " << endl;
+	o.printVector ();
+
+	point eye(0,0,2), coi(p), v_up(0,1,0);
+	Matrix4x4 w2e = worldToEye (eye, coi, v_up); 
+	cout << "In eye coordinates " << endl;
+	o.multiplyMatrix (w2e, o.points[0]);
+	o.printVector ();
+
+/*	Matrix4x4 e2win  = setPerspective (fovy, aspect, zNear, zFar);
+	cout << "In window coordinates " << endl;
+	o.printVector ();
+
+	Matrix4x4 win2vp = setViewPort (vx1, vx2, vy1, vy2, wx1, wx2, wy1, wy2);
+	cout << "In view port" << endl;
+	o.printVector ();*/
+
+	return 0;
+}

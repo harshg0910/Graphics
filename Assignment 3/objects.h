@@ -27,6 +27,14 @@ public:
 	return result;
     }
 
+    point cross(const point& v) {
+	point result;
+	result.x = y*v.z - z*v.y;
+	result.y = z*v.x - x*v.z;
+	result.z = x*v.y - y*v.x;
+	return result;
+    }
+
     double dot(const point& a) {
 	point u(a), v(x,y,z);
 	u.normalize();
@@ -55,13 +63,14 @@ class Object {
 	void translate3D (point P, Matrix4x4& matTransl3D);
 	void rotate3D (point p1, point p2, float angleInDegrees, Matrix4x4 finalRotation);
 	void printVector (vector<point> v);
-	point multiplyMatrix (Matrix4x4 T, point p);
 
 public:
 	float color[3];
 
 	Object() { color[0]=0.0; color[1]=0.0; color[2]=1.0; } // BLUE color 
 	vector<point> points;
+	void printVector () { printVector(points); }
+	point multiplyMatrix (Matrix4x4 T, point p);
 	void setColor (float r, float g, float b) {color[0]=r; color[1]=g; color[2]=b;}
 	void scale(double sx,double sy, double sz );
 	void translate (point p);
