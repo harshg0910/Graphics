@@ -54,6 +54,50 @@ public:
 
 const double PI = acos (-1);
 
+typedef point vector3;
+struct SurfaceK {
+	float KR;
+	float KG;
+        float KB;
+
+	SurfaceK(float kR, float kG, float kB): KR(kR), KG(kG), KB(kB) {}
+	SurfaceK(): KR(0), KG(0), KB(0) {}
+};
+
+struct Intensity {
+	float IR;
+	float IG;
+	float IB;
+
+	Intensity(): IR(0), IG(0), IB(0) {}
+	Intensity(float iR, float iG, float iB): IR(iR), IG(iG), IB(iB) {}
+	void intensityMulK(SurfaceK K) {
+		IR *= K.KR; IG *= K.KG; IB *= K.KB;
+	}
+	
+	Intensity operator+ (const Intensity& I) {
+		Intensity Ir(IR, IG, IB);
+		Ir.IR += I.IR;
+		Ir.IG += I.IG;
+		Ir.IB += I.IB;
+		return Ir;
+	}
+
+	void print () {	
+		cout << "Intensity: " << endl;
+		cout << "R: " << IR << ", ";
+		cout << "G: " << IG << ", ";
+		cout << "B: " << IB << ", ";
+		cout << endl;
+	}
+};
+
+// Bronze Material Properties
+const float DEFAULT_SHININESS=50.0;
+const SurfaceK DEFAULT_AMBI (1.0, 1.0, 1.0);
+const SurfaceK DEFAULT_DIFF (0.8, 0.6, 0.0);
+const SurfaceK DEFAULT_SPEC ( 1.0, 1.0, 0.4);
+
 class Object {
 	inline float degreesToRadians (float degree) { return degree*PI/180; }
 
@@ -66,11 +110,54 @@ class Object {
 
 public:
 	float color[3];
+	SurfaceK Ka, Kd, Ks;
+	double ns;
 
-	Object() { color[0]=0.0; color[1]=0.0; color[2]=1.0; } // BLUE color 
-	vector<point> points;
+	Matrix4x4 modelViewM;
+	Matrix4x4 projectionM;
+	Matrix4x4 viewPortM;
+
+	GLfloat zCommon;	
+
+	// World to Eye coordinates 
+	void worldToEye (vector3 eye, vector3 coi, vector3 v_up);
+
+	// Set the camera to this position with respective parameters
+	void setPerspective(GLfloat fovy,GLfloat aspect,GLfloat zNear,GLfloat zFar);
+
+	// Convert the window to view port
+	void setViewPort (GLint vx1, GLint vx2, GLint vy1, GLint vy2,
+		GLint wx1, GLint wx2, GLint wy1, GLint wy2);
+
+	Object() {
+		// BLUE color 
+		color[0]=0.0; color[1]=0.0; color[2]=1.0;
+
+		zCommon = 0;
+		Ka = DEFAULT_AMBI;
+		Ks = DEFAULT_SPEC;
+		Kd = DEFAULT_DIFF;
+		ns = DEFAULT_SHININESS;
+		matrix4x4SetIdentity (modelViewM);
+		matrix4x4SetIdentity (projectionM);
+		matrix4x4SetIdentity (viewPortM);
+	}
+
+ 	vector<point> points;
+ 	vector<point> normals;
+	vector<Intensity> intensities;
 	void printVector () { printVector(points); }
 	point multiplyMatrix (Matrix4x4 T, point p);
+
+	void setSurfaceK (SurfaceK ka, SurfaceK kd, SurfaceK ks, double s) {	
+		Ka=ka; Kd=kd; Ks=ks;
+		ns=s;
+	}
+
+	Intensity intensityAtP (Intensity Ia, vector<Intensity> Is, vector<point> Ls, point pP, point pN, point pV);
+	
+	Intensity intensityAtP (Intensity Il, point pP, point pL, point pN, point pV);
+
 	void setColor (float r, float g, float b) {color[0]=r; color[1]=g; color[2]=b;}
 	void scale(double sx,double sy, double sz );
 	void translate (point p);
@@ -78,11 +165,20 @@ public:
 	void shear(double shxy,double shxz,double shyx,
 			double shyz,double shzx,double shzy);
 	virtual void render();
+	bool setLight;
+	vector<Intensity> Is;
+	vector<point> Ls;
+	Intensity ambient;
+	point pV;
+
+	void setLighting (vector<Intensity> is, vector<point> ls, Intensity amb, point v);
+	void calcIntensities ();
 };
 
 class cube : public Object {
 public:
 	cube(point center,double side);
+//	void render();
 };
 
 class sphere : public Object{
@@ -90,6 +186,7 @@ public:
 	point center;
 	double radius;
 	sphere(point center,double radius );
+//	void render();
 };
 
 #endif
