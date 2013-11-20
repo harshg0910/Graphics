@@ -4,7 +4,9 @@
 #include <GL/glut.h>
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <cmath>
+#include "cohen.h"
 
 using namespace std;
 
@@ -184,9 +186,12 @@ public:
 typedef vector<point> face;
 class cube : public Object {
     void pushFace (int x, int y, int z, int w);
+    face clipFace (double xmin, double xmax, double ymin, double ymax, face f);
 public:
     vector<face> faces;
 	cube(point center,double side);
+
+    vector<face> clipFaces (double xmin, double xmax, double ymin, double ymax);
 	void render();
 	void glrender();
 };

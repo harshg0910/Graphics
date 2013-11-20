@@ -460,6 +460,34 @@ cube::cube(point center,double side) {
     pushFace (4,3,7,8);     // BOTTOM FACE 4378
 }
 
+// Clips the given face F against the given rectangular boundary
+face cube::clipFace (double xmin, double xmax, double ymin, double ymax, face F) {
+    int n = F.size ();
+    face fnew;
+    LineClipping lc (xmin, xmax, ymin, ymax);
+    for (int i=0; i<n; ++i) {
+        point p0 = F[i];
+        point p1 = F[(i+1)%n];
+        if (lc.lineClip (p0.x, p0.y, p1.x, p1.y)) {
+           // if (!find (fnew.begin(), fnew.end(), p0))
+                fnew.push_back (p0);
+           // if (!find (fnew.begin(), fnew.end(), p1)) 
+                fnew.push_back (p1);
+        }
+    }
+    return fnew;
+}
+
+// CLIP all the faces against the given rectangular boundary
+vector<face> cube::clipFaces (double xmin, double xmax, double ymin, double ymax) {
+    vector<face> fnew;
+    for (int i=0; i<faces.size (); ++i) {
+        face f = clipFace (xmin, xmax, ymin, ymax, faces[i]);
+        if (f.size()>1) fnew.push_back (f);
+    }
+    return fnew;
+}
+
 void Object::setLighting (vector<Intensity> is, vector<point> ls, Intensity amb, point v){
 	Is = is;
 	Ls = ls;

@@ -1,18 +1,11 @@
-typedef int OutCode;
- 
-const int INSIDE = 0; // 0000
-const int LEFT = 1;   // 0001
-const int RIGHT = 2;  // 0010
-const int BOTTOM = 4; // 0100
-const int TOP = 8;    // 1000
+#include "cohen.h"
+
  
 // Compute the bit code for a point (x, y) using the clip rectangle
 // bounded diagonally by (xmin, ymin), and (xmax, ymax)
  
-// ASSUME THAT xmax, xmin, ymax and ymin are global constants.
  
-OutCode ComputeOutCode(double x, double y)
-{
+OutCode LineClipping::ComputeOutCode(double x, double y) {
         OutCode code;
  
         code = INSIDE;          // initialised as being inside of clip window
@@ -32,8 +25,7 @@ OutCode ComputeOutCode(double x, double y)
 // Cohen–Sutherland clipping algorithm clips a line from
 // P0 = (x0, y0) to P1 = (x1, y1) against a rectangle with 
 // diagonal from (xmin, ymin) to (xmax, ymax).
-void CohenSutherlandLineClipAndDraw(double x0, double y0, double x1, double y1)
-{
+bool LineClipping::lineClip(double& x0, double& y0, double& x1, double& y1) {
         // compute outcodes for P0, P1, and whatever point lies outside the clip rectangle
         OutCode outcode0 = ComputeOutCode(x0, y0);
         OutCode outcode1 = ComputeOutCode(x1, y1);
@@ -82,10 +74,12 @@ void CohenSutherlandLineClipAndDraw(double x0, double y0, double x1, double y1)
                         }
                 }
         }
-        if (accept) {
+
+        return accept;
+/*        if (accept) {
                // Following functions are left for implementation by user based on
                // their platform (OpenGL/graphics.h etc.)
                DrawRectangle(xmin, ymin, xmax, ymax);
                LineSegment(x0, y0, x1, y1);
-        }
+        } */
 }

@@ -1,12 +1,13 @@
 LIB = -lGL -lGLU -lglut
 CPP = g++ -Wall
 
-all: sol-opengl.o clipping.o sol-3D.o objects.o cube.o sphere.o
+all: sol-opengl.o clipping.o sol-3D.o objects.o cube.o sphere.o cohen.o
 	$(CPP) sol-opengl.o -o sol-opengl $(LIB)
 	$(CPP) sol-3D.o -o sol-3D $(LIB)
 	$(CPP) clipping.o -o clipping $(LIB)
-	$(CPP) cube.o objects.o -o cube $(LIB)
-	$(CPP) sphere.o objects.o -o sphere $(LIB)
+	$(CPP) cube.o objects.o cohen.o -o cube $(LIB)
+	$(CPP) sphere.o objects.o cohen.o -o sphere $(LIB)
+	$(CPP) algoTester.cpp cohen.o -o algo $(LIB)
 
 sphere.o: sphere.cpp objects.h objects.cpp
 	$(CPP) -c sphere.cpp -o sphere.o	
@@ -25,6 +26,9 @@ sol-3D.o: sol-3D.cpp
 
 clipping.o: clipping.cpp 
 	$(CPP) -c clipping.cpp -o clipping.o
+
+cohen.o: cohen.cpp cohen.h
+	$(CPP) -c cohen.cpp -o cohen.o
 
 clean:
 	rm -rf sol-3D cube sphere clipping sol-opengl *.o
