@@ -62,17 +62,19 @@ void display() {
 	glEnd();
 
 	cube home(point(),1);
-	home.worldToEye(eye, coi, v_up);
-	home.setPerspective (65, (float)g_Width / g_Height, g_nearPlane, g_farPlane);
-	home.setLighting (Is, Ls, ambient, vp);
+    home.setColor (1,1,0);
+	//home.worldToEye(eye, coi, v_up);
+	//home.setPerspective (65, (float)g_Width / g_Height, g_nearPlane, g_farPlane);
+	//home.setLighting (Is, Ls, ambient, vp);
 	//home.setViewPort (20, 100, 20, 100, 20, g_Width, 20, g_Height);
-	home.render(); 
+	//home.render(); 
+    home.glrender();
 
-	sphere tummy(point(1,2,0),1);
+	/*sphere tummy(point(1,2,0),1);
 	tummy.worldToEye(eye, coi, v_up);
 	tummy.setPerspective (65, (float)g_Width / g_Height, g_nearPlane, g_farPlane);
 	tummy.setLighting (Is, Ls, ambient, vp);
-	tummy.render();
+	tummy.render(); */
 
 	glFlush();
 	glutSwapBuffers();

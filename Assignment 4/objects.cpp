@@ -416,6 +416,23 @@ void cube::pushFace (int x, int y, int z, int w) {
     faces.push_back (f);
 }
 
+void cube::glrender() {
+	Intensity I(color[0], color[1], color[2]);
+	glPushMatrix();
+
+    for (int i=0; i<faces.size(); ++i) {
+  	glBegin(GL_QUADS);
+		glColor3f (I.IR, I.IG, I.IB);
+		glVertex3f(faces[i][0].x, faces[i][0].y, faces[i][0].z);
+		glVertex3f(faces[i][1].x, faces[i][1].y, faces[i][1].z);
+		glVertex3f(faces[i][2].x, faces[i][2].y, faces[i][2].z);
+		glVertex3f(faces[i][3].x, faces[i][3].y, faces[i][3].z);
+	glEnd();
+    }
+
+	glPopMatrix();
+}
+
 cube::cube(point center,double side) {
 	points.push_back(point(center.x - side/2.0 , center.y + side/2.0, center.z + side/2.0));    // 1
 	points.push_back(point(center.x + side/2.0 , center.y + side/2.0, center.z + side/2.0));    // 2

@@ -188,6 +188,7 @@ public:
     vector<face> faces;
 	cube(point center,double side);
 	void render();
+	void glrender();
 };
 
 class sphere : public Object{
