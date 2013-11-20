@@ -1,13 +1,10 @@
-#include <stdio.h>
+
 #include <GL/glut.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/time.h>
 
 #define VIEWING_DISTANCE_MIN  3.0
-
-enum {
-  MENU_LIGHTING = 1,
-  MENU_POLYMODE,
-  MENU_EXIT
-};
 
 typedef int BOOL;
 #define TRUE 1
@@ -37,7 +34,7 @@ void DrawCubeFace(float fSize)
   glEnd();
 }
 
-void DrawCubeWithTextureCoords (float fSize)
+void DrawCube (float fSize)
 {
   glPushMatrix();
   DrawCubeFace (fSize);
@@ -59,34 +56,33 @@ void RenderObjects(void)
   float colorBronzeDiff[4] = { 0.8, 0.6, 0.0, 1.0 };
   float colorBronzeSpec[4] = { 1.0, 1.0, 0.4, 1.0 };
   float colorBlue[4]       = { 0.0, 0.2, 1.0, 1.0 };
-  float colorRed[4]       = { 1.0, 0.2, 0.0, 1.0 };
   float colorNone[4]       = { 0.0, 0.0, 0.0, 0.0 };
 
   glMatrixMode(GL_MODELVIEW);
   glPushMatrix();
-  glTranslatef(-3, -2, 0);
+
+  // Main object (cube) ... transform to its coordinates, and render
   glRotatef(15, 1, 0, 0);
   glRotatef(45, 0, 1, 0);
   glRotatef(g_fTeapotAngle, 0, 0, 1);
   glMaterialfv(GL_FRONT, GL_DIFFUSE, colorBlue);
   glMaterialfv(GL_FRONT, GL_SPECULAR, colorNone);
   glColor4fv(colorBlue);
-  DrawCubeWithTextureCoords(1.0);
-  glPopMatrix();
-  
+  DrawCube(1.0);
+
+  // Child object (teapot) ... relative transform, and render
   glPushMatrix();
-  glTranslatef(3, 2, 0);
-  //glRotatef(g_fTeapotAngle2, 1, 1, 0);
+  glTranslatef(2, 0, 0);
+  glRotatef(g_fTeapotAngle2, 1, 1, 0);
   glMaterialfv(GL_FRONT, GL_DIFFUSE, colorBronzeDiff);
   glMaterialfv(GL_FRONT, GL_SPECULAR, colorBronzeSpec);
   glMaterialf(GL_FRONT, GL_SHININESS, 50.0);
   glColor4fv(colorBronzeDiff);
-  glutSolidTeapot(1);
-  //glutSolidIcosahedron();
-  //glutSolidSphere(1,20,20);
-  //glutWireSphere(0.75, 20, 20);
-  glPopMatrix();
+  glutSolidTeapot(0.3);
+//  glutSolidSphere(1,20,20);
+  glPopMatrix(); 
 
+  glPopMatrix();
 }
 
 void display(void)
@@ -129,13 +125,14 @@ void InitGraphics(void)
    glEnable(GL_LIGHT0);
 }
 
+
 int main(int argc, char** argv)
 {
   // GLUT Window Initialization:
   glutInit (&argc, argv);
   glutInitWindowSize (g_Width, g_Height);
   glutInitDisplayMode ( GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
-  glutCreateWindow ("Q3");
+  glutCreateWindow ("CS248 GLUT example");
 
   // Initialize OpenGL graphics state
   InitGraphics();
@@ -148,3 +145,7 @@ int main(int argc, char** argv)
   glutMainLoop ();
   return 0;
 }
+
+ 
+
+

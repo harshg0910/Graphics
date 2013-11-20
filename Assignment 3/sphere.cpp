@@ -32,7 +32,7 @@ void display() {
     glColor3f(0, 0, 1); glVertex3f(0, 0, 0); glVertex3f(0, 0, 10);
     glEnd();
 
-    sphere tummy(point(),1.0);
+    sphere tummy(point(),0.1);
     //tummy.worldToEye(eye, coi, v_up);
     //tummy.setPerspective (65, (float)g_Width / g_Height, g_nearPlane, g_farPlane);
     tummy.setLighting (Is, Ls, ambient, vp);

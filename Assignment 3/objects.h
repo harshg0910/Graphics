@@ -42,6 +42,12 @@ public:
 	return u.x*v.x + u.y*v.y + u.z*v.z;
     }
 
+    void print() {
+	cout << "x:" <<x;
+	cout << "y:" <<y;
+	cout << "z:" <<z << endl;
+    }
+
     void scale(double mod) {
 	x *= mod; y *= mod; z *= mod;
     }
@@ -178,7 +184,7 @@ public:
 class cube : public Object {
 public:
 	cube(point center,double side);
-//	void render();
+	void render();
 };
 
 class sphere : public Object{

@@ -123,6 +123,7 @@ void Object::setViewPort (GLint vx1, GLint vx2, GLint vy1, GLint vy2,
 		0,  0, 0,  1
 	};
 
+	matrix4x4SetIdentity (viewPortM);
 	matrix4x4PreMultiply (viewMatrix, viewPortM, viewPortM);
 }
 
@@ -360,6 +361,51 @@ void Object::render() {
 	cout << "END OF COORDINATES\n" << endl ;
 	glEnd();
 } 
+
+void drawFace (Intensity i0, Intensity i1, Intensity i2, Intensity i3,
+		point p0, point p1, point p2, point p3) {
+	glPushMatrix();
+  	glBegin(GL_QUADS);
+		glColor3f (i0.IR, i0.IG, i0.IB);
+		glVertex3f(p0.x, p0.y, p0.z);
+		glColor3f (i1.IR, i1.IG, i1.IB);
+		glVertex3f(p1.x, p1.y, p1.z);
+		glColor3f (i2.IR, i2.IG, i2.IB);
+		glVertex3f(p2.x, p2.y, p2.z);
+		glColor3f (i3.IR, i3.IG, i3.IB);
+		glVertex3f(p3.x, p3.y, p3.z);
+	glEnd();
+	glPopMatrix();
+}
+
+void cube::render() {
+	cout << "In cube's render" << endl;
+	calcIntensities();
+	vector<point> ps=points;
+	cout << zCommon << endl;
+	for(unsigned int i = 0 ; i < points.size() ; i++) {
+		point p = points[i];
+		point n = normals[i];
+
+		p = multiplyMatrix (modelViewM, p);
+		p = multiplyMatrix (projectionM, p);
+		p = multiplyMatrix (viewPortM, p);
+		p.print(); 
+		ps[i] = p;
+		ps[i].z = zCommon;
+		//glVertex3f(p.x,p.y,zCommon);
+	}
+
+  	glMatrixMode(GL_MODELVIEW);
+	drawFace (intensities[0], intensities[1], intensities[2], intensities[3], ps[0],ps[1],ps[2],ps[3]);	
+	drawFace (intensities[1], intensities[2], intensities[6], intensities[5], ps[1],ps[2],ps[6],ps[5]);	
+	drawFace (intensities[0], intensities[3], intensities[7], intensities[4], ps[0],ps[3],ps[7],ps[4]);	
+	drawFace (intensities[4], intensities[5], intensities[6], intensities[7], ps[4],ps[5],ps[6],ps[7]);	
+	drawFace (intensities[2], intensities[3], intensities[7], intensities[6], ps[2],ps[3],ps[7],ps[6]);	
+	drawFace (intensities[0], intensities[1], intensities[5], intensities[4], ps[0],ps[1],ps[5],ps[4]);	
+
+	cout << "END1212 OF COORDINATES\n" << endl ;
+}
 
 cube::cube(point center,double side){
 
