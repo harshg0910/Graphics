@@ -181,8 +181,11 @@ public:
 	void calcIntensities ();
 };
 
+typedef vector<point> face;
 class cube : public Object {
+    void pushFace (int x, int y, int z, int w);
 public:
+    vector<face> faces;
 	cube(point center,double side);
 	void render();
 };

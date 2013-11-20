@@ -407,71 +407,25 @@ void cube::render() {
 	cout << "END1212 OF COORDINATES\n" << endl ;
 }
 
-cube::cube(point center,double side){
+void cube::pushFace (int x, int y, int z, int w) {
+    face f;
+    x--; y--; z--; w--;
 
-	/*	// For front and back faces
-		double i = center.x - side/2.0;
-		for (double j = center.y - side/2.0; j <= center.y + side/2.0; j += 0.01)
-		{
-		for (double k = center.z - side/2.0; k <= center.z + side/2.0; k += 0.01)
-		{
-		points.push_back(point(i,j,k));
-		}
-		}
-		i = center.x + side/2.0;
-		for (double j = center.y - side/2.0; j <= center.y + side/2.0; j += 0.01)
-		{
-		for (double k = center.z - side/2.0; k <= center.z + side/2.0; k += 0.01)
-		{
-		points.push_back(point(i,j,k));
-		}
-		}
+    // Face xyzw
+    f.push_back(points[x]); f.push_back(points[y]); f.push_back(points[z]); f.push_back(points[w]);
+    faces.push_back (f);
+}
 
-	// For left and right faces
-	i = center.y - side/2.0;
-	for (double j = center.x - side/2.0; j <= center.x + side/2.0; j += 0.01)
-	{
-	for (double k = center.z - side/2.0; k <= center.z + side/2.0; k += 0.0100)
-	{
-	points.push_back(point(j,i,k));
-	}
-	}
-	i = center.y + side/2.0;
-	for (double j = center.x - side/2.0; j <= center.x + side/2.0; j += 0.01)
-	{
-	for (double k = center.z - side/2.0; k <= center.z + side/2.0; k += 0.01)
-	{
-	points.push_back(point(j,i,k));
-	}
-	}
+cube::cube(point center,double side) {
+	points.push_back(point(center.x - side/2.0 , center.y + side/2.0, center.z + side/2.0));    // 1
+	points.push_back(point(center.x + side/2.0 , center.y + side/2.0, center.z + side/2.0));    // 2
+	points.push_back(point(center.x + side/2.0 , center.y - side/2.0, center.z + side/2.0));    // 3
+	points.push_back(point(center.x - side/2.0 , center.y - side/2.0, center.z + side/2.0));    // 4
 
-	// For top and bottom faces
-	i = center.z - side/2.0;
-	for (double j = center.y - side/2.0; j <= center.y + side/2.0; j += 0.01)
-	{
-	for (double k = center.x - side/2.0; k <= center.x + side/2.0; k += 0.01)
-	{
-	points.push_back(point(k,j,i));
-	}
-	}
-	i = center.z + side/2.0;
-	for (double j = center.y - side/2.0; j <= center.y + side/2.0; j += 0.01)
-	{
-	for (double k = center.x - side/2.0; k <= center.x + side/2.0; k += 0.01)
-	{
-	points.push_back(point(k,j,i));
-	}
-	} 
-	 */
-
-	points.push_back(point(center.x - side/2.0 , center.y - side/2.0, center.z - side/2.0));
-	points.push_back(point(center.x - side/2.0 , center.y - side/2.0, center.z + side/2.0));
-	points.push_back(point(center.x - side/2.0 , center.y + side/2.0, center.z + side/2.0));
-	points.push_back(point(center.x - side/2.0 , center.y + side/2.0, center.z - side/2.0));
-	points.push_back(point(center.x + side/2.0 , center.y - side/2.0, center.z - side/2.0));
-	points.push_back(point(center.x + side/2.0 , center.y - side/2.0, center.z + side/2.0));
-	points.push_back(point(center.x + side/2.0 , center.y + side/2.0, center.z + side/2.0));
-	points.push_back(point(center.x + side/2.0 , center.y + side/2.0, center.z - side/2.0));	
+	points.push_back(point(center.x - side/2.0 , center.y + side/2.0, center.z - side/2.0));    // 5
+	points.push_back(point(center.x + side/2.0 , center.y + side/2.0, center.z - side/2.0));	// 6
+	points.push_back(point(center.x + side/2.0 , center.y - side/2.0, center.z - side/2.0));    // 7
+	points.push_back(point(center.x - side/2.0 , center.y - side/2.0, center.z - side/2.0));    // 8
 
 	Intensity dummy(color[0], color[1], color[2]);
 	for (int i=0; i<points.size(); ++i) {
@@ -479,6 +433,14 @@ cube::cube(point center,double side){
 		normals.push_back (points[i]-center);
 	}
 	setLight = false;
+
+    // Set the faces 
+    pushFace (1,2,3,4);     // FRONT FACE 1234
+    pushFace (5,6,7,8);     // REAR FACE 5678
+    pushFace (2,6,7,3);     // RIGHT FACE 2673
+    pushFace (1,5,8,4);     // LEFT FACE 1584
+    pushFace (1,2,6,5);     // TOP FACE 1265
+    pushFace (4,3,7,8);     // BOTTOM FACE 4378
 }
 
 void Object::setLighting (vector<Intensity> is, vector<point> ls, Intensity amb, point v){
