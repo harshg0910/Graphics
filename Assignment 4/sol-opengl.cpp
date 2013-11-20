@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <GL/glut.h>
+#include <iostream>
+using namespace std;
 
 #define VIEWING_DISTANCE_MIN  3.0
 
@@ -77,32 +79,34 @@ void RenderObjects(void)
   glPushMatrix();
 	  //glTranslatef(-3, -2, 0);
 	  //glRotatef(15, 1, 0, 0);
-	  glRotatef(60, 0, 1, 0);
+	  //glRotatef(60, 0, 1, 0);
 	  //glRotatef(g_fTeapotAngle, 0, 0, 1); 
 	  glColor4fv(colorBlue);
 	  DrawBoundary(1.0);
 
-	  glTranslatef(0, 1, 0);
+	  glTranslatef(0, 0.5, 0);
 	  glColor4fv(colorGreen);
-	  DrawCube(1.0);
+	  DrawCube(0.5);
 
-	  glTranslatef(0, 1, 0);
+	  glTranslatef(0, 0.5, 0);
 	  glColor4fv(colorBlue);
-	  DrawCube(1.0);
+	  DrawCube(0.5);
 
-	  glTranslatef(0, 1, 0);
+	  glTranslatef(0, 0.5, 0);
 	  glColor4fv(colorRed);
-	  DrawCube(1.0);
+	  DrawCube(0.5);
   glPopMatrix();
 }
 
 void display(void)
 {
    // Clear frame buffer and depth buffer
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   glClearColor (1,1,1,0);
+   glClear(GL_COLOR_BUFFER_BIT);
 
    // Set up viewing transformation, looking down -Z axis
-   glLoadIdentity();
+   //glLoadIdentity();
    gluLookAt(0, 0, -g_fViewDistance, 0, 0, -1, 0, 1, 0);
 
    // Render the scene
@@ -114,22 +118,23 @@ void display(void)
 
 void reshape(GLint width, GLint height)
 {
+   cout << "RESHAPE called" << endl;
    g_Width = width;
    g_Height = height;
 
    glViewport(0, 0, g_Width, g_Height);
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
-   gluPerspective(60.0, (float)g_Width / g_Height, g_nearPlane, g_farPlane);
-//   glOrtho(0.0f, g_Width, 0.0f, g_Height, -1.0f, 1.0f);
-   //glOrtho (0.0, g_Width, 0.0, g_Height, g_nearPlane, g_farPlane);
-   glMatrixMode(GL_MODELVIEW);
-}
+//   gluPerspective(60.0, (float)g_Width / g_Height, g_nearPlane, g_farPlane);
+//   gluOrtho2D (-1,2,-1,2);
 
-void InitGraphics(void)
-{
-   glEnable(GL_DEPTH_TEST);
-   glDepthFunc(GL_LESS);
+   const int L = 3;
+   if (width<=height)
+	gluOrtho2D (-L, L, -L*height/width, L* height/width);
+   else
+	gluOrtho2D (-L*width/height, L*width/height, -L, L);
+
+   glMatrixMode(GL_MODELVIEW);
 }
 
 int main(int argc, char** argv)
@@ -137,11 +142,9 @@ int main(int argc, char** argv)
   // GLUT Window Initialization:
   glutInit (&argc, argv);
   glutInitWindowSize (g_Width, g_Height);
-  glutInitDisplayMode (GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+  //glutInitDisplayMode (GLUT_RGB | GLUT_DOUBLE | GLUT_DEPTH);
+  glutInitDisplayMode (GLUT_RGB | GLUT_SINGLE);
   glutCreateWindow ("OpenGL Clipping, HSR, & Scan Conversion");
-
-  // Initialize OpenGL graphics state
-  InitGraphics();
 
   // Register callbacks:
   glutDisplayFunc (display);
