@@ -4,6 +4,7 @@
 
 #define VIEWING_DISTANCE_MIN  3.0
 point eye(0, 0, 10), coi(0, 0, 0), v_up(0, 1, 0);
+//point eye(0, 10, 0), coi(0, 0, 0), v_up(1, 0, 0);
 static GLfloat g_fTeapotAngle = 0.0;
 static GLfloat g_fTeapotAngle2 = 0.0;
 static GLfloat g_fViewDistance = 3 * VIEWING_DISTANCE_MIN;
@@ -11,7 +12,7 @@ static GLfloat g_nearPlane = 0.5;
 static GLfloat g_farPlane = 100;
 static int g_Width = 600;                          // Initial window width
 static int g_Height = 600;                         // Initial window height
-static point vl(0, 100,0);  	   	   // Position of light
+static point vl(0, 100,0);  	   	   	   // Position of light
 static point vp(1,1,1);				   // Viewer's position
 static Intensity ambient(0.1,0.02,0.02);
 static Intensity light0(1.0,1.0,1.0);
@@ -62,13 +63,17 @@ void display() {
 	glEnd();
 
 	cube home(point(),1);
-    home.setColor (1,1,0);
+	home.setColor (1,1,0);
 	//home.worldToEye(eye, coi, v_up);
 	//home.setPerspective (65, (float)g_Width / g_Height, g_nearPlane, g_farPlane);
 	//home.setLighting (Is, Ls, ambient, vp);
 	//home.setViewPort (20, 100, 20, 100, 20, g_Width, 20, g_Height);
 	//home.render(); 
-    home.glrender();
+	home.worldToEye(eye, coi, v_up);
+	home.setOrtho(-1,1,-1,1,-1,1);
+	home.projectFace();
+	//home.glrender();
+	home.glrenderProjected ();
 
 	/*sphere tummy(point(1,2,0),1);
 	tummy.worldToEye(eye, coi, v_up);

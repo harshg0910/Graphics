@@ -107,6 +107,28 @@ void Object::setPerspective(GLfloat fovy,GLfloat aspect,GLfloat zNear,GLfloat zF
 	zCommon = zNear;
 }
 
+void Object::setOrtho(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearVal, GLfloat farVal) {
+	GLfloat tx = - (right+left)/(right-left);
+	GLfloat ty = - (top+bottom)/(top-bottom);
+	GLfloat tz = - (farVal+nearVal)/(farVal-nearVal);
+
+	GLfloat x = 2.0/(right-left);
+	GLfloat y = 2.0/(top-bottom);
+	GLfloat z = -2.0/(farVal-nearVal);
+
+	Matrix4x4 orthoMat = 
+	{
+		x, 0, 0, tx,
+		0, y, 0, ty,
+		0, 0, z, tz,
+		0, 0, 0,  1
+	};
+
+	// MAY BE JUST GIVE THIS AS THE projectioM matrix
+	matrix4x4PreMultiply (orthoMat, projectionM, projectionM);
+	zCommon = nearVal;
+}
+
 // Convert the window to view port
 void Object::setViewPort (GLint vx1, GLint vx2, GLint vy1, GLint vy2,
 		GLint wx1, GLint wx2, GLint wy1, GLint wy2) {
@@ -416,7 +438,7 @@ void cube::pushFace (int x, int y, int z, int w) {
     faces.push_back (f);
 }
 
-void cube::glrender() {
+void cube::glrender(vector<face> faces) {
 	Intensity I(color[0], color[1], color[2]);
 	glPushMatrix();
 
@@ -431,6 +453,28 @@ void cube::glrender() {
     }
 
 	glPopMatrix();
+}
+
+void cube::glrender () {
+	glrender (faces);
+}
+
+void cube::glrenderProjected () {
+    //vector<face> faces=projectedFaces;
+    vector<face> faces= clipFaces (-1,0,-1,0);
+    Intensity I(color[0], color[1], color[2]);
+    glPushMatrix();
+
+    for (int i=0; i<faces.size(); ++i) {
+  	glBegin(GL_QUADS);
+		glColor3f (I.IR, I.IG, I.IB);
+		glVertex3f(faces[i][0].x, faces[i][0].y, zCommon);
+		glVertex3f(faces[i][1].x, faces[i][1].y, zCommon);
+		glVertex3f(faces[i][2].x, faces[i][2].y, zCommon);
+		glVertex3f(faces[i][3].x, faces[i][3].y, zCommon);
+	glEnd();
+    }
+    glPopMatrix();
 }
 
 cube::cube(point center,double side) {
@@ -458,6 +502,8 @@ cube::cube(point center,double side) {
     pushFace (1,5,8,4);     // LEFT FACE 1584
     pushFace (1,2,6,5);     // TOP FACE 1265
     pushFace (4,3,7,8);     // BOTTOM FACE 4378
+
+    projectedFaces = faces;
 }
 
 // Clips the given face F against the given rectangular boundary
@@ -485,7 +531,33 @@ vector<face> cube::clipFaces (double xmin, double xmax, double ymin, double ymax
         face f = clipFace (xmin, xmax, ymin, ymax, faces[i]);
         if (f.size()>1) fnew.push_back (f);
     }
+    projectedFaces  = fnew;
     return fnew;
+}
+
+
+void cube::projectFace (face f) {
+	cout << "Started the projection work" << endl;
+	cout << "Vector before projection: " << endl;
+	printVector (f);
+	face fnew;
+	for (int i=0; i<f.size(); ++i) {
+		point p = f[i];
+		p = multiplyMatrix (modelViewM, p);
+		p = multiplyMatrix (projectionM, p);
+		fnew.push_back (p);
+	}
+	
+	cout << "After projection the point looks like" << endl;
+	printVector (fnew);
+}
+
+void cube::projectFace () {
+	cout << "-------------------PROJECTION---------------" << endl;
+	for (int i=0; i<faces.size(); ++i) {
+		projectFace (faces[i]);
+	}
+	cout << "----------------END PROJECTION---------------" << endl;
 }
 
 void Object::setLighting (vector<Intensity> is, vector<point> ls, Intensity amb, point v){

@@ -107,6 +107,7 @@ const SurfaceK DEFAULT_DIFF (0.8, 0.6, 0.0);
 const SurfaceK DEFAULT_SPEC ( 1.0, 1.0, 0.4);
 
 class Object {
+protected:
 	inline float degreesToRadians (float degree) { return degree*PI/180; }
 
 	void printTransformationMatrix (Matrix4x4 m); 
@@ -132,6 +133,8 @@ public:
 
 	// Set the camera to this position with respective parameters
 	void setPerspective(GLfloat fovy,GLfloat aspect,GLfloat zNear,GLfloat zFar);
+
+	void setOrtho(GLfloat left, GLfloat right, GLfloat bottom, GLfloat top, GLfloat nearVal, GLfloat farVal);
 
 	// Convert the window to view port
 	void setViewPort (GLint vx1, GLint vx2, GLint vy1, GLint vy2,
@@ -187,13 +190,18 @@ typedef vector<point> face;
 class cube : public Object {
     void pushFace (int x, int y, int z, int w);
     face clipFace (double xmin, double xmax, double ymin, double ymax, face f);
-public:
-    vector<face> faces;
-	cube(point center,double side);
+    void glrender (vector<face> faces);
 
+public:
+    vector<face> faces, projectedFaces;
+    cube(point center,double side);
+
+    void projectFace (face f);
+    void projectFace ();
     vector<face> clipFaces (double xmin, double xmax, double ymin, double ymax);
-	void render();
-	void glrender();
+    void render();
+    void glrender();
+    void glrenderProjected();
 };
 
 class sphere : public Object{
