@@ -26,20 +26,33 @@ double zoom              = 0.1;
 const double rotate_step = 5.0;
 const double zoom_step   = 0.1;
 
+const GLdouble EFront[] = {0.0f, 0.0f, g_fViewDistance};
+const GLdouble ERight[] = {g_fViewDistance, 0.0f, 0.0f};
+const GLdouble ETop[]   = {0.0f, g_fViewDistance, 0.0};
+
+// EYE, CAMERA & NORMAL Settings
+GLdouble ex=EFront[0], ey=EFront[1], ez=EFront[2];
+//GLdouble ex=ERight[0], ey=ERight[1], ez=ERight[2];
+//GLdouble ex=ETop[0], ey=ETop[1], ez=ETop[2];
+GLdouble cx=0.5f, cy=0.5f, cz=0.5f;
+GLdouble ux=0.0f, uy=1.0f, uz=0.0f;
+
+GLfloat bottomCubeSize = 1.0f;
+GLfloat bottomCubePos  = 2.0f;
+
 void keyboard(unsigned char key, int x, int y)
 {
-    if (key == 'd')
-        rotate_y += rotate_step;
-    else if (key == 'a')
-        rotate_y -= rotate_step;
-    else if (key == 'w')
-        rotate_x += rotate_step;
-    else if (key == 's')
-        rotate_x -= rotate_step;
-    else if (key == 'q')
-        zoom *= (1.0 + zoom_step);
-    else if (key == 'e')
-        zoom *= (1.0 - zoom_step);
+    if (key == 'd')         rotate_y += rotate_step;
+    else if (key == 'a')    rotate_y -= rotate_step;
+    else if (key == 'w')    rotate_x += rotate_step;
+    else if (key == 's')    rotate_x -= rotate_step;
+    else if (key == 'q')    zoom *= (1.0 + zoom_step);
+    else if (key == 'e')    zoom *= (1.0 - zoom_step);
+    else if (key == '1')    bottomCubePos += 0.2;           // Push into the object 1
+    else if (key == '2')    bottomCubePos -= 0.2;           // Pop out of the object 1
+    else if (key == 'f')    { ex=EFront[0], ey=EFront[1], ez=EFront[2]; }
+    else if (key == 'r')    { ex=ERight[0], ey=ERight[1], ez=ERight[2]; }
+    else if (key == 't')    { ex=ETop[0], ey=ETop[1], ez=ETop[2];       }
 
     glutPostRedisplay();
 }
@@ -76,27 +89,37 @@ void display() {
 	home.glrenderProjected (0,2,0,2);
     //box.translate (point(0.2,0.2,0.2));
 */
-	cube box(point(1,1,1),2);
+/*	cube box(point(1,1,1),2);
 	box.setColor (0,1,0);
 	box.worldToEye(eye, coi, v_up);
 	box.setOrtho(-1,1,-1,1,-1,1);
 	box.projectFace();
 	//box.glrenderProjected (0,2,0,2);
-    box.glrender ();
+    box.glrender ();*/
 
-
-    cube redB(point(1,2,1),1);
-	redB.setColor (1,0,0);
+    // RED PART
+    cube redB(point(1,bottomCubePos+2*bottomCubeSize,1),bottomCubeSize);
+	redB.setColor (1,0,0);  // RED COLOR
 	redB.worldToEye(eye, coi, v_up);
 	redB.setOrtho(-1,1,-1,1,-1,1);
 	redB.glrenderProjected (0,2,0,2);
     //redB.glrender ();
 
-	/*sphere tummy(point(1,2,0),1);
-	tummy.worldToEye(eye, coi, v_up);
-	tummy.setPerspective (65, (float)g_Width / g_Height, g_nearPlane, g_farPlane);
-	tummy.setLighting (Is, Ls, ambient, vp);
-	tummy.render(); */
+    // BLUE PART
+    cube blueB(point(1,bottomCubePos+bottomCubeSize,1),bottomCubeSize);
+	blueB.setColor (0,0,1); // B
+	blueB.worldToEye(eye, coi, v_up);
+	blueB.setOrtho(-1,1,-1,1,-1,1);
+	blueB.glrenderProjected (0,2,0,2);
+    //blueB.glrender();
+
+    // GREEN PART
+    cube greenB(point(1,bottomCubePos,1),bottomCubeSize);
+	greenB.setColor (0,1,0);    // G
+	greenB.worldToEye(eye, coi, v_up);
+	greenB.setOrtho(-1,1,-1,1,-1,1);
+	greenB.glrenderProjected (0,2,0,2);
+    //greenB.glrender (); 
 
 	glFlush();
 	glutSwapBuffers();
