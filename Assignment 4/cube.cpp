@@ -62,7 +62,7 @@ void display() {
 	glColor3f(0, 0, 1); glVertex3f(0, 0, 0); glVertex3f(0, 0, 10);
 	glEnd();
 
-	cube home(point(),1);
+/*	cube home(point(),1);
 	home.setColor (1,1,0);
 	//home.worldToEye(eye, coi, v_up);
 	//home.setPerspective (65, (float)g_Width / g_Height, g_nearPlane, g_farPlane);
@@ -73,7 +73,24 @@ void display() {
 	home.setOrtho(-1,1,-1,1,-1,1);
 	home.projectFace();
 	//home.glrender();
-	home.glrenderProjected ();
+	home.glrenderProjected (0,2,0,2);
+    //box.translate (point(0.2,0.2,0.2));
+*/
+	cube box(point(1,1,1),2);
+	box.setColor (0,1,0);
+	box.worldToEye(eye, coi, v_up);
+	box.setOrtho(-1,1,-1,1,-1,1);
+	box.projectFace();
+	//box.glrenderProjected (0,2,0,2);
+    box.glrender ();
+
+
+    cube redB(point(1,2,1),1);
+	redB.setColor (1,0,0);
+	redB.worldToEye(eye, coi, v_up);
+	redB.setOrtho(-1,1,-1,1,-1,1);
+	redB.glrenderProjected (0,2,0,2);
+    //redB.glrender ();
 
 	/*sphere tummy(point(1,2,0),1);
 	tummy.worldToEye(eye, coi, v_up);

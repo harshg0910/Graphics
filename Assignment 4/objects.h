@@ -29,6 +29,10 @@ public:
 	return result;
     }
 
+    inline bool equals(const point &p) {
+        return x==p.x && y==p.y;
+    }
+
     point cross(const point& v) {
 	point result;
 	result.x = y*v.z - z*v.y;
@@ -201,7 +205,7 @@ public:
     vector<face> clipFaces (double xmin, double xmax, double ymin, double ymax);
     void render();
     void glrender();
-    void glrenderProjected();
+    void glrenderProjected(double xmin, double xmax, double ymin, double ymax);
 };
 
 class sphere : public Object{

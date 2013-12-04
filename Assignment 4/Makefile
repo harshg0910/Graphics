@@ -1,5 +1,5 @@
 LIB = -lGL -lGLU -lglut
-CPP = g++ -Wall
+CPP = g++ -g -Wall
 
 all: sol-opengl.o clipping.o sol-3D.o objects.o cube.o sphere.o cohen.o
 	$(CPP) sol-opengl.o -o sol-opengl $(LIB)
