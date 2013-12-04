@@ -3,7 +3,6 @@
 #include "objects.h"
 
 #define VIEWING_DISTANCE_MIN  3.0
-point eye(0, 0, 10), coi(0, 0, 0), v_up(0, 1, 0);
 //point eye(0, 10, 0), coi(0, 0, 0), v_up(1, 0, 0);
 static GLfloat g_fTeapotAngle = 0.0;
 static GLfloat g_fTeapotAngle2 = 0.0;
@@ -30,7 +29,13 @@ const GLdouble EFront[] = {0.0f, 0.0f, g_fViewDistance};
 const GLdouble ERight[] = {g_fViewDistance, 0.0f, 0.0f};
 const GLdouble ETop[]   = {0.0f, g_fViewDistance, 0.0};
 
+const GLdouble VFront[] = {0,1,0};
+const GLdouble VRight[] = {0,0,1};
+const GLdouble VTop[]   = {1,0,0};
+
 // EYE, CAMERA & NORMAL Settings
+//point eye(0, 0, 10), coi(0, 0, 0), v_up(0, 1, 0);
+point eye(EFront[0], EFront[1], EFront[2]), coi(0, 0, 0), v_up(VFront[0], VFront[1], VFront[2]);
 GLdouble ex=EFront[0], ey=EFront[1], ez=EFront[2];
 //GLdouble ex=ERight[0], ey=ERight[1], ez=ERight[2];
 //GLdouble ex=ETop[0], ey=ETop[1], ez=ETop[2];
@@ -48,11 +53,11 @@ void keyboard(unsigned char key, int x, int y)
     else if (key == 's')    rotate_x -= rotate_step;
     else if (key == 'q')    zoom *= (1.0 + zoom_step);
     else if (key == 'e')    zoom *= (1.0 - zoom_step);
-    else if (key == '1')    bottomCubePos += 0.2;           // Push into the object 1
-    else if (key == '2')    bottomCubePos -= 0.2;           // Pop out of the object 1
-    else if (key == 'f')    { ex=EFront[0], ey=EFront[1], ez=EFront[2]; }
-    else if (key == 'r')    { ex=ERight[0], ey=ERight[1], ez=ERight[2]; }
-    else if (key == 't')    { ex=ETop[0], ey=ETop[1], ez=ETop[2];       }
+    else if (key == '1')    bottomCubePos += 0.5;           // Push into the object 1
+    else if (key == '2')    bottomCubePos -= 0.5;           // Pop out of the object 1
+    else if (key == 'f')    { eye.x=EFront[0], eye.y=EFront[1], eye.z=EFront[2]; v_up.x=VFront[0]; v_up.y=VFront[1]; v_up.z=VFront[2];}
+    else if (key == 'r')    { eye.x=ERight[0], eye.y=ERight[1], eye.z=ERight[2]; v_up.x=VRight[0]; v_up.y=VRight[1]; v_up.z=VRight[2];}
+    else if (key == 't')    { eye.x=ETop[0],   eye.y=ETop[1],   eye.z=ETop[2];   v_up.x=VTop[0];   v_up.y=VTop[1];   v_up.z=VTop[2];  }
 
     glutPostRedisplay();
 }
