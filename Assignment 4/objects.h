@@ -5,6 +5,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
+#include <climits>
 #include <cmath>
 #include "cohen.h"
 
@@ -196,16 +197,20 @@ class cube : public Object {
     face clipFace (double xmin, double xmax, double ymin, double ymax, face f);
     void glrender (vector<face> faces);
 
+    void projectFace (int facei);
 public:
     vector<face> faces, projectedFaces;
     cube(point center,double side);
 
-    void projectFace (face f);
     void projectFace ();
     vector<face> clipFaces (double xmin, double xmax, double ymin, double ymax);
     void render();
     void glrender();
-    void glrenderProjected(double xmin, double xmax, double ymin, double ymax);
+    void glrenderProjected(double xmin, double xmax, double ymin, double ymax, double zmin, double zmax);
+
+
+    void calculateZMinZMax(double xmin, double xmax, double ymin, double ymax);
+    double zmin, zmax;
 };
 
 class sphere : public Object{

@@ -30,12 +30,13 @@ const GLdouble ERight[] = {g_fViewDistance, 0.0f, 0.0f};
 const GLdouble ETop[]   = {0.0f, g_fViewDistance, 0.0};
 
 const GLdouble VFront[] = {0,1,0};
-const GLdouble VRight[] = {0,0,1};
+const GLdouble VRight[] = {0,1,0};
 const GLdouble VTop[]   = {1,0,0};
 
 // EYE, CAMERA & NORMAL Settings
 //point eye(0, 0, 10), coi(0, 0, 0), v_up(0, 1, 0);
 point eye(EFront[0], EFront[1], EFront[2]), coi(0, 0, 0), v_up(VFront[0], VFront[1], VFront[2]);
+//point eye(ETop[0], ETop[1], ETop[2]), coi(0, 0, 0), v_up(VTop[0], VTop[1], VTop[2]);
 GLdouble ex=EFront[0], ey=EFront[1], ez=EFront[2];
 //GLdouble ex=ERight[0], ey=ERight[1], ez=ERight[2];
 //GLdouble ex=ETop[0], ey=ETop[1], ez=ETop[2];
@@ -43,7 +44,7 @@ GLdouble cx=0.5f, cy=0.5f, cz=0.5f;
 GLdouble ux=0.0f, uy=1.0f, uz=0.0f;
 
 GLfloat bottomCubeSize = 1.0f;
-GLfloat bottomCubePos  = 2.0f;
+GLfloat bottomCubePos  = 2.5f;
 
 void keyboard(unsigned char key, int x, int y)
 {
@@ -53,8 +54,8 @@ void keyboard(unsigned char key, int x, int y)
     else if (key == 's')    rotate_x -= rotate_step;
     else if (key == 'q')    zoom *= (1.0 + zoom_step);
     else if (key == 'e')    zoom *= (1.0 - zoom_step);
-    else if (key == '1')    bottomCubePos += 0.5;           // Push into the object 1
-    else if (key == '2')    bottomCubePos -= 0.5;           // Pop out of the object 1
+    else if (key == '1')    bottomCubePos += 1;           // Push into the object 1
+    else if (key == '2')    bottomCubePos -= 1;           // Pop out of the object 1
     else if (key == 'f')    { eye.x=EFront[0], eye.y=EFront[1], eye.z=EFront[2]; v_up.x=VFront[0]; v_up.y=VFront[1]; v_up.z=VFront[2];}
     else if (key == 'r')    { eye.x=ERight[0], eye.y=ERight[1], eye.z=ERight[2]; v_up.x=VRight[0]; v_up.y=VRight[1]; v_up.z=VRight[2];}
     else if (key == 't')    { eye.x=ETop[0],   eye.y=ETop[1],   eye.z=ETop[2];   v_up.x=VTop[0];   v_up.y=VTop[1];   v_up.z=VTop[2];  }
@@ -94,20 +95,24 @@ void display() {
 	home.glrenderProjected (0,2,0,2);
     //box.translate (point(0.2,0.2,0.2));
 */
-/*	cube box(point(1,1,1),2);
-	box.setColor (0,1,0);
+	cube box(point(1,1,1),2);
+	box.setColor (1,1,0);
 	box.worldToEye(eye, coi, v_up);
 	box.setOrtho(-1,1,-1,1,-1,1);
-	box.projectFace();
+	//box.projectFace();
 	//box.glrenderProjected (0,2,0,2);
-    box.glrender ();*/
-
+    box.glrender ();
+    box.calculateZMinZMax (0,2,0,2);
+    cout << "BOX: zmin: " << box.zmin << " zmax: " << box.zmax << endl;
+ 
+    double zmin=box.zmin, zmax=box.zmax;
     // RED PART
     cube redB(point(1,bottomCubePos+2*bottomCubeSize,1),bottomCubeSize);
 	redB.setColor (1,0,0);  // RED COLOR
 	redB.worldToEye(eye, coi, v_up);
 	redB.setOrtho(-1,1,-1,1,-1,1);
-	redB.glrenderProjected (0,2,0,2);
+	//redB.projectFace();
+	redB.glrenderProjected (0,2,0,2, zmin, zmax);
     //redB.glrender ();
 
     // BLUE PART
@@ -115,7 +120,7 @@ void display() {
 	blueB.setColor (0,0,1); // B
 	blueB.worldToEye(eye, coi, v_up);
 	blueB.setOrtho(-1,1,-1,1,-1,1);
-	blueB.glrenderProjected (0,2,0,2);
+	blueB.glrenderProjected (0,2,0,2, zmin, zmax);
     //blueB.glrender();
 
     // GREEN PART
@@ -123,7 +128,7 @@ void display() {
 	greenB.setColor (0,1,0);    // G
 	greenB.worldToEye(eye, coi, v_up);
 	greenB.setOrtho(-1,1,-1,1,-1,1);
-	greenB.glrenderProjected (0,2,0,2);
+	greenB.glrenderProjected (0,2,0,2, zmin, zmax);
     //greenB.glrender (); 
 
 	glFlush();

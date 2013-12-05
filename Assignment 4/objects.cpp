@@ -459,9 +459,40 @@ void cube::glrender () {
 	glrender (faces);
 }
 
-void cube::glrenderProjected (double xmin, double xmax, double ymin, double ymax) {
+void cube::calculateZMinZMax (double xmin, double xmax, double ymin, double ymax) {
     //vector<face> faces=projectedFaces;
+    // CHECK if not PROJECTED
+    projectFace();
+
     vector<face> faces= clipFaces (xmin, xmax, ymin, ymax);
+
+    zmin=INT_MAX, zmax=INT_MIN;
+    for (int i=0; i<faces.size(); ++i) 
+        for (int j=0; j<faces[i].size(); ++j) {
+            zmin = min (faces[i][j].z, zmin);
+            zmax = max (faces[i][j].z, zmax);
+        }
+    cout << "Z: zmin: << " << zmin << " zmax: " << zmax << endl;
+}
+
+void cube::glrenderProjected (double xmin, double xmax, double ymin, double ymax, double ZMIN, double ZMAX) {
+    //vector<face> faces=projectedFaces;
+    // CHECK if not PROJECTED
+    projectFace();
+
+    vector<face> faces= clipFaces (xmin, xmax, ymin, ymax);
+
+    zmin=INT_MAX, zmax=INT_MIN;
+    for (int i=0; i<faces.size(); ++i) 
+        for (int j=0; j<faces[i].size(); ++j) {
+            zmin = min (faces[i][j].z, zmin);
+            zmax = max (faces[i][j].z, zmax);
+        }
+    cout << "Z: zmin: << " << zmin << " zmax: " << zmax;
+
+    cout << "->" << ZMIN << "," << ZMAX << endl;
+    if (zmin>ZMAX || zmax<ZMIN) return;
+
     Intensity I(color[0], color[1], color[2]);
     glPushMatrix();
 
@@ -475,6 +506,7 @@ void cube::glrenderProjected (double xmin, double xmax, double ymin, double ymax
 	glEnd();
     }
     glPopMatrix();
+
 }
 
 cube::cube(point center,double side) {
@@ -510,24 +542,24 @@ cube::cube(point center,double side) {
 face cube::clipFace (double xmin, double xmax, double ymin, double ymax, face F) {
     int n = F.size ();
     face fnew;
-    cout << "Clipped face : " << endl;
+//    cout << "Clipped face : " << endl;
     LineClipping lc (xmin, xmax, ymin, ymax);
     for (int i=0; i<n; ++i) {
         point p0 = F[i];
         point p1 = F[(i+1)%n];
 
-        cout << "(" << p0.x << ", " << p0.y << "), ";
-        cout << "(" << p1.x << ", " << p1.y << ")->";
+//        cout << "(" << p0.x << ", " << p0.y << "), ";
+//        cout << "(" << p1.x << ", " << p1.y << ")->";
 
         if (lc.lineClip (p0.x, p0.y, p1.x, p1.y)) {
            // if (!find (fnew.begin(), fnew.end(), p0))
            if (fnew.size()>1 && p0.equals(fnew[fnew.size()-1])) {
-                   cout << "Matches with previous" << endl;
+//                   cout << "Matches with previous" << endl;
            }
            else {
                 cout << "(" << p0.x << ", " << p0.y << "), ";
                 fnew.push_back (p0);
-                cout << "Should not occur" << endl;
+//                cout << "Should not occur" << endl;
            }
            
            // if (!find (fnew.begin(), fnew.end(), p1)) 
@@ -536,17 +568,17 @@ face cube::clipFace (double xmin, double xmax, double ymin, double ymax, face F)
                    cout << "Matches with first" << endl;
                else {
                    fnew.push_back (p1);
-                   cout << "(" << p1.x << ", " << p1.y << ")\n";
-                   cout << "Should not occur" << endl;
+//                   cout << "(" << p1.x << ", " << p1.y << ")\n";
+//                   cout << "Should not occur" << endl;
                }
            }
            else {
                fnew.push_back (p1);
-               cout << "(" << p1.x << ", " << p1.y << ")\n";
+//               cout << "(" << p1.x << ", " << p1.y << ")\n";
            }
         }
         else {
-            cout << "()" << endl;
+//            cout << "()" << endl;
         }
     }
 
@@ -567,7 +599,7 @@ vector<face> cube::clipFaces (double xmin, double xmax, double ymin, double ymax
         face f = clipFace (xmin, xmax, ymin, ymax, faces[i]);
         if (f.size()>=4){
             fnew.push_back (f);
-            printVector (f);
+//            printVector (f);
         }
     }
     projectedFaces  = fnew;
@@ -575,9 +607,10 @@ vector<face> cube::clipFaces (double xmin, double xmax, double ymin, double ymax
 }
 
 
-void cube::projectFace (face f) {
+void cube::projectFace (int facei) {
 //	cout << "Started the projection work" << endl;
 //	cout << "Vector before projection: " << endl;
+    face f = faces[facei];
 //	printVector (f);
 	face fnew;
 	for (int i=0; i<f.size(); ++i) {
@@ -589,12 +622,13 @@ void cube::projectFace (face f) {
 	
 //	cout << "After projection the point looks like" << endl;
 //	printVector (fnew);
+    faces[facei] = fnew;   // Set projected
 }
 
 void cube::projectFace () {
 //	cout << "-------------------PROJECTION---------------" << endl;
 	for (int i=0; i<faces.size(); ++i) {
-		projectFace (faces[i]);
+		projectFace (i);
 	}
 //	cout << "----------------END PROJECTION---------------" << endl;
 }
